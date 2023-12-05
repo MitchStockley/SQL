@@ -3,45 +3,57 @@
 BEGIN;
 
 
+CREATE TABLE IF NOT EXISTS public."Department"
+(
+    depart_id integer,
+    depart_name character varying(50) COLLATE pg_catalog."default",
+    depart_city character varying(50) COLLATE pg_catalog."default",
+    PRIMARY KEY (depart_id)
+);
+
 CREATE TABLE IF NOT EXISTS public."Employees"
 (
-    emp_id integer,
-    first_name character varying(50),
-    surname character varying(50),
-    gender text,
-    address text,
-    email character varying(50),
+    emp_id integer NOT NULL,
+    first_name character varying(50) COLLATE pg_catalog."default",
+    surname character varying(50) COLLATE pg_catalog."default",
+    gender text COLLATE pg_catalog."default",
+    address text COLLATE pg_catalog."default",
+    email character varying(50) COLLATE pg_catalog."default",
     depart_id integer,
     role_id integer,
     salary_id integer,
     overtime_id integer,
-    PRIMARY KEY (emp_id)
-);
-
-CREATE TABLE IF NOT EXISTS public."Department"
-(
-    depart_id integer,
-    depart_name character varying(50),
-    depart_city character varying(50)
-);
-
-CREATE TABLE IF NOT EXISTS public."Roles"
-(
-    role_id integer,
-    role character varying(50)
-);
-
-CREATE TABLE IF NOT EXISTS public."Salaries"
-(
-    salary_id integer,
-    salary_pa integer
+    CONSTRAINT "Employees_pkey" PRIMARY KEY (emp_id)
 );
 
 CREATE TABLE IF NOT EXISTS public."Overtime Hours"
 (
     overtime_id integer,
-    overtime_hours integer
+    overtime_hours integer,
+    PRIMARY KEY (overtime_id)
 );
+
+CREATE TABLE IF NOT EXISTS public."Roles"
+(
+    role_id integer,
+    role character varying(50) COLLATE pg_catalog."default",
+    PRIMARY KEY (role_id)
+);
+
+CREATE TABLE IF NOT EXISTS public."Salaries"
+(
+    salary_id integer,
+    salary_pa integer,
+    PRIMARY KEY (salary_id)
+);
+
+ALTER TABLE IF EXISTS public."Employees"
+    ADD FOREIGN KEY (overtime_id)
+    REFERENCES public."Overtime Hours" (overtime_id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+
 
 ALTER TABLE IF EXISTS public."Employees"
     ADD FOREIGN KEY (role_id)
@@ -52,7 +64,7 @@ ALTER TABLE IF EXISTS public."Employees"
 
 
 ALTER TABLE IF EXISTS public."Employees"
-    ADD FOREIGN KEY (salary_id)
+	ADD FOREIGN KEY (salary_id)
     REFERENCES public."Salaries" (salary_id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
@@ -60,13 +72,6 @@ ALTER TABLE IF EXISTS public."Employees"
 
 
 ALTER TABLE IF EXISTS public."Employees"
-    ADD FOREIGN KEY (overtime_id)
-    REFERENCES public."Overtime Hours" (overtime_id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
-
-    ALTER TABLE IF EXISTS public."Employees"
     ADD FOREIGN KEY (depart_id)
     REFERENCES public."Department" (depart_id) MATCH SIMPLE
     ON UPDATE NO ACTION
@@ -74,8 +79,6 @@ ALTER TABLE IF EXISTS public."Employees"
     NOT VALID;
 
 END;
-	
-	
 SELECT * FROM public."Employees"
 SELECT * FROM public."Department"
 SELECT * FROM public."Overtime Hours"
@@ -88,7 +91,8 @@ VALUES
   ('2', 'Michael', 'Brown', 'Male', 'randburg', 'michael@gmail.com', 50000, 4444, 5555, 6666),
   ('3', 'Emily', 'Jones', 'Female', 'pretoria', 'emily@gmail.com', 38000, 7777, 8888, 9999),
   ('4', 'David', 'Miller', 'Male', 'durban', 'david@gmail.com', 45000, 1234, 5678, 9876),
-  ('5', 'Sophia', 'Williams', 'Female', 'capetown', 'sophia@gmail.com', 41000, 2468, 1357, 9753);
+  ('5', 'Sophia', 'Williams', 'Female', 'capetown', 'sophia@gmail.com', 41000, 2468, 1357, 9753),
+  ('6', 'Sopia', 'Wiliams', 'Female', 'capetown', 'sophia@gmail.com', 4100, 268, 157, 953);
   
   INSERT INTO public."Department" (depart_id, depart_name, depart_city)
 VALUES 
@@ -145,8 +149,3 @@ LEFT JOIN
     public."Salaries" S ON E.salary_id = S.salary_id
 LEFT JOIN
     public."Overtime Hours" OH ON E.overtime_id = OH.overtime_id;
-
-
-
-
-
