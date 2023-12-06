@@ -127,15 +127,32 @@ END;
 ALTER TABLE public.profession
 ADD CONSTRAINT unique_professions UNIQUE (profession);
 
+--test constraint
+INSERT INTO public.profession (prof_id, profession)
+VALUES
+(160, 'Pharmacist');
+
 
 -- Adding CHECK constraint to the 'zip_code' column in the 'zip_code' table
 ALTER TABLE public.zip_code
 ADD CONSTRAINT check_zip_code_length CHECK (LENGTH(zip_code::text) = 4);
 
+--test constraint
+INSERT INTO public.zip_code (zip_code, city, province)
+VALUES
+	(43091, 'Dullstroom', 'Mpumalanga');
+
 
 -- Adding UNIQUE constraint to the 'profession' column in the 'my_contacts' table
 ALTER TABLE public.my_contacts
 ADD CONSTRAINT unique_profession UNIQUE (prof_id);
+
+--testing constraint
+INSERT INTO public.my_contacts (contact_id, last_name, first_name, phone, email, gender, birthday, prof_id, zip_code, status_id)
+VALUES
+
+    (2100, 'Smith', 'John', 1234567890, 'john.smith@email.com', 'Male', '1990-01-15', 10, 2000, 1);
+
 
 --updateing my_contacts table to ensure phone is 10 digits and randon generate numbers
 ALTER TABLE public.my_contacts
@@ -144,6 +161,14 @@ ALTER COLUMN phone TYPE bigint;
 -- Add a check constraint to ensure the length is 10 digits
 ALTER TABLE public.my_contacts
 ADD CONSTRAINT check_phone_length CHECK (LENGTH(phone::text) = 10);
+
+--testing constraint
+INSERT INTO public.my_contacts (contact_id, last_name, first_name, phone, email, gender, birthday, prof_id, zip_code, status_id)
+VALUES
+
+    (2100, 'Smith', 'John', 234567890, 'john.smith@email.com', 'Male', '1990-01-15', 130, 2000, 1);
+
+
 
 INSERT INTO public.profession (prof_id, profession)
 VALUES
