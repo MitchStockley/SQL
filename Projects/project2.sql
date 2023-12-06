@@ -123,6 +123,28 @@ ALTER TABLE IF EXISTS public.contact_seeking
 
 END;
 
+--unique profession collumn
+ALTER TABLE public.profession
+ADD CONSTRAINT unique_professions UNIQUE (profession);
+
+
+-- Adding CHECK constraint to the 'zip_code' column in the 'zip_code' table
+ALTER TABLE public.zip_code
+ADD CONSTRAINT check_zip_code_length CHECK (LENGTH(zip_code::text) = 4);
+
+
+-- Adding UNIQUE constraint to the 'profession' column in the 'my_contacts' table
+ALTER TABLE public.my_contacts
+ADD CONSTRAINT unique_profession UNIQUE (prof_id);
+
+--updateing my_contacts table to ensure phone is 10 digits and randon generate numbers
+ALTER TABLE public.my_contacts
+ALTER COLUMN phone TYPE bigint;
+
+-- Add a check constraint to ensure the length is 10 digits
+ALTER TABLE public.my_contacts
+ADD CONSTRAINT check_phone_length CHECK (LENGTH(phone::text) = 10);
+
 INSERT INTO public.profession (prof_id, profession)
 VALUES
     (10, 'Software Engineer'),
@@ -139,28 +161,34 @@ VALUES
     (120, 'Artist'),
     (130, 'Dentist'),
     (140, 'Accountant'),
-    (150, 'Pharmacist'),
-	(160, 'Pharmacist');
+    (150, 'Pharmacist');
 	
 	SELECT * FROM public."profession"
 	
 	INSERT INTO public.zip_code (zip_code, city, province)
-VALUES
+	VALUES
     (2000, 'Johannesburg', 'Gauteng'),
+	(2001, 'Pretoria', 'Gauteng'),
     (3001, 'Durban', 'KwaZulu-Natal'),
+	(3002, 'Pennington', 'KwaZulu-Natal'),
     (6002, 'Port Elizabeth', 'Eastern Cape'),
+	(6003, 'Jefferys Bay', 'Eastern Cape'),
     (8003, 'Cape Town', 'Western Cape'),
+	(8004, 'Stellenbosch', 'Western Cape'),
     (9304, 'Bloemfontein', 'Free State'),
+	(9305, 'Klerksdop', 'Free State'),
     (1205, 'Polokwane', 'Limpopo'),
+	(1206, 'Bela Bela', 'Limpopo'),
     (2306, 'Mafikeng', 'North West'),
+	(2307, 'Rustenberg', 'North West'),
     (3007, 'Kimberley', 'Northern Cape'),
+	(3008, 'Paarl', 'Northern Cape'),
     (4308, 'Witbank', 'Mpumalanga'),
-	(43080, 'Witbank', 'Mpumalanga');
+	(4309, 'Dullstroom', 'Mpumalanga');
 	
 	SELECT * FROM public."zip_code"
 	
-
-INSERT INTO public.interests (interest_id, interests)
+	INSERT INTO public.interests (interest_id, interests)
 VALUES
     (110, 'Hiking'),
     (210, 'Reading'),
@@ -179,6 +207,30 @@ VALUES
     (1510, 'Nature');
 	
 	SELECT * FROM public."interests"
+	
+	-- Add a new column called interest2
+ALTER TABLE public.interests ADD COLUMN interest2 VARCHAR(255);
+
+-- Update the interest2 column with some sample data
+UPDATE public.interests
+SET interest2 = 
+    CASE
+        WHEN interest_id = 110 THEN 'Mountain Climbing'
+        WHEN interest_id = 210 THEN 'Book Club'
+        WHEN interest_id = 310 THEN 'Backpacking'
+        WHEN interest_id = 410 THEN 'Baking'
+        WHEN interest_id = 510 THEN 'Digital Art'
+        WHEN interest_id = 610 THEN 'Swimming'
+        WHEN interest_id = 710 THEN 'Podcasting'
+        WHEN interest_id = 810 THEN 'Sculpture'
+        WHEN interest_id = 910 THEN 'Virtual Reality'
+        WHEN interest_id = 1010 THEN 'Table Tennis'
+        WHEN interest_id = 1110 THEN 'Documentaries'
+        WHEN interest_id = 1210 THEN 'Chess'
+        WHEN interest_id = 1310 THEN 'Poetry'
+        WHEN interest_id = 1410 THEN 'Salsa Dancing'
+        WHEN interest_id = 1510 THEN 'Bird Watching'
+    END;
 	
 	INSERT INTO public.seeking (seeking_id, seeking)
 VALUES
@@ -222,25 +274,25 @@ VALUES
 	
 	INSERT INTO public.my_contacts (contact_id, last_name, first_name, phone, email, gender, birthday, prof_id, zip_code, status_id)
 VALUES
-    (100, 'Smith', 'John', 7890, 'john.smith@email.com', 'Male', '1990-01-15', 10, 2000, 1),
-    (200, 'Johnson', 'Alice', 43210, 'alice.johnson@email.com', 'Female', '1985-05-20', 20, 3001, 2),
-    (300, 'Williams', 'Bob', 4567, 'bob.williams@email.com', 'Male', '1995-08-10', 30, 6002, 3),
-    (400, 'Jones', 'Emily', 7777, 'emily.jones@email.com', 'Female', '1988-12-03', 40, 8003, 4),
-    (500, 'Davis', 'Chris', 3333, 'chris.davis@email.com', 'Male', '1992-04-25', 50, 9304, 5),
-    (600, 'Brown', 'Sophia', 9999, 'sophia.brown@email.com', 'Female', '1987-07-15', 60, 1205, 6),
-    (700, 'Miller', 'Emma', 6666, 'emma.miller@email.com', 'Female', '1998-02-18', 70, 2306, 7),
-    (800, 'Wilson', 'David', 34444, 'david.wilson@email.com', 'Male', '1993-11-30', 80, 3007, 8),
-    (900, 'Moore', 'Olivia', 78888, 'olivia.moore@email.com', 'Female', '1989-09-12', 90, 4308, 9),
-    (1000, 'Taylor', 'Michael', 45555, 'michael.taylor@email.com', 'Male', '1996-06-08', 100, 2000, 10),
-    (1100, 'Anderson', 'Ava', 90000, 'ava.anderson@email.com', 'Female', '1994-03-22', 110, 2000, 11),
-    (1200, 'Thomas', 'Daniel', 09999, 'daniel.thomas@email.com', 'Male', '1986-10-05', 120, 3001, 12),
-    (1300, 'White', 'Ella', 43333, 'ella.white@email.com', 'Female', '1991-07-28', 130, 4308, 13),
-    (1400, 'Martin', 'Isaac', 65555, 'isaac.martin@email.com', 'Male', '1997-04-14', 140, 9304, 14),
-    (1500, 'Clark', 'Mia', 87777, 'mia.clark@email.com', 'Female', '1984-09-01', 150, 2000, 15);
-	
-		SELECT * FROM public."my_contacts"
-		
-	INSERT INTO public.contact_interest (contact_id, interest_id)
+    (100, 'Smith', 'John', 1234567890, 'john.smith@email.com', 'Male', '1990-01-15', 10, 2000, 1),
+    (200, 'Johnson', 'Alice', 1234564321, 'alice.johnson@email.com', 'Female', '1985-05-20', 20, 3001, 2),
+    (300, 'Williams', 'Bob', 1234564567, 'bob.williams@email.com', 'Male', '1995-08-10', 30, 6002, 3),
+    (400, 'Jones', 'Emily', 1234567777, 'emily.jones@email.com', 'Female', '1988-12-03', 40, 8003, 4),
+    (500, 'Davis', 'Chris', 1234563333, 'chris.davis@email.com', 'Male', '1992-04-25', 50, 9304, 5),
+    (600, 'Brown', 'Sophia', 1234569999, 'sophia.brown@email.com', 'Female', '1987-07-15', 60, 1205, 6),
+    (700, 'Miller', 'Emma', 1234566666, 'emma.miller@email.com', 'Female', '1998-02-18', 70, 9305, 7),
+    (800, 'Wilson', 'David', 1234534444, 'david.wilson@email.com', 'Male', '1993-11-30', 80, 3007, 8),
+    (900, 'Moore', 'Olivia', 1234578888, 'olivia.moore@email.com', 'Female', '1989-09-12', 90, 3002, 9),
+    (1000, 'Taylor', 'Michael', 1234545555, 'michael.taylor@email.com', 'Male', '1996-06-08', 100, 2000, 10),
+    (1100, 'Anderson', 'Ava', 1234590000, 'ava.anderson@email.com', 'Female', '1994-03-22', 110, 2000, 11),
+    (1200, 'Thomas', 'Daniel', 1234509999, 'daniel.thomas@email.com', 'Male', '1986-10-05', 120, 3001, 12),
+    (1300, 'White', 'Ella', 1234543333, 'ella.white@email.com', 'Female', '1991-07-28', 130, 4308, 13),
+    (1400, 'Martin', 'Isaac', 1234565555, 'isaac.martin@email.com', 'Male', '1997-04-14', 140, 9304, 14),
+    (1500, 'Clark', 'Mia', 1234587777, 'mia.clark@email.com', 'Female', '1984-09-01', 150, 2001, 15);
+
+SELECT * FROM public."my_contacts"
+
+INSERT INTO public.contact_interest (contact_id, interest_id)
 VALUES
  
     (100, 110),
@@ -281,6 +333,8 @@ VALUES
 	
 	SELECT * FROM public."contact_seeking"
 	
+ --left join
+	
 	SELECT
     c.contact_id,
     c.last_name,
@@ -291,6 +345,7 @@ VALUES
     z.province,
     s.status,
     i.interests,
+    i.interest2, -- Include the interest2 column
     se.seeking
 FROM
     public.my_contacts c
@@ -301,86 +356,3 @@ LEFT JOIN public.contact_interest ci ON c.contact_id = ci.contact_id
 LEFT JOIN public.interests i ON ci.interest_id = i.interest_id
 LEFT JOIN public.contact_seeking cs ON c.contact_id = cs.contact_id
 LEFT JOIN public.seeking se ON cs.seeking_id = se.seeking_id;
-
--- Adding UNIQUE constraint to the 'profession' column in the 'my_contacts' table
-ALTER TABLE public.my_contacts
-ADD CONSTRAINT unique_profession UNIQUE (prof_id);
-
-
-
-
--- Adding CHECK constraint to the 'zip_code' column in the 'zip_code' table
-ALTER TABLE public.zip_code
-ADD CONSTRAINT check_zip_code_length CHECK (LENGTH(zip_code::text) = 4);
-
--- Example data for zip_code table with provinces and cities
--- Adding missing cities for each province in the zip_code table
-INSERT INTO public.zip_code (zip_code, city, province)
-VALUES
-    (2001, 'Sandton', 'Gauteng'),
-    -- Add another Gauteng city
-
-    (3002, 'Pietermaritzburg', 'KwaZulu-Natal'),
-    -- Add another KwaZulu-Natal city
-
-    (6001, 'Uitenhage', 'Eastern Cape'),
-    -- Add another Eastern Cape city
-
-    (8002, 'Stellenbosch', 'Western Cape'),
-    -- Add another Western Cape city
-
-    (9301, 'Welkom', 'Free State'),
-    -- Add another Free State city
-
-    (1202, 'Mokopane', 'Limpopo'),
-    -- Add another Limpopo city
-
-    (2302, 'Rustenburg', 'North West'),
-    -- Add another North West city
-
-    (3006, 'Upington', 'Northern Cape'),
-    -- Add another Northern Cape city
-
-    (4301, 'Nelspruit', 'Mpumalanga');
-    -- Add another Mpumalanga city
-
-UPDATE public.interests SET interests = 'Running & Hiking' WHERE interest_id = 110;
-UPDATE public.interests SET interests = 'Swimming & Reading' WHERE interest_id = 210;
-UPDATE public.interests SET interests = 'Coding & Traveling' WHERE interest_id = 310;
-UPDATE public.interests SET interests = 'Golf & Soccer' WHERE interest_id = 410;
-UPDATE public.interests SET interests = 'Tennis & Photography' WHERE interest_id = 510;
-UPDATE public.interests SET interests = 'Fitness & Gaming' WHERE interest_id = 610;
-UPDATE public.interests SET interests = 'Art & Music' WHERE interest_id = 710;
-UPDATE public.interests SET interests = 'Art & sports' WHERE interest_id = 810;
-UPDATE public.interests SET interests = 'Technology & Science' WHERE interest_id = 910;
-UPDATE public.interests SET interests = 'Sports & Reading' WHERE interest_id = 1010;
-UPDATE public.interests SET interests = 'Movies & Sport' WHERE interest_id = 1110;
-UPDATE public.interests SET interests = 'gaming & Friends' WHERE interest_id = 1210;
-UPDATE public.interests SET interests = 'Writing & Rugby' WHERE interest_id = 1310;
-UPDATE public.interests SET interests = 'Dancing & Singing' WHERE interest_id = 1410;
-UPDATE public.interests SET interests = 'Nature & Hiking' WHERE interest_id = 1510;
--- Continue this pattern for all interests
-
-
--- Attempt to insert a new row with an existing prof_id
-INSERT INTO public.my_contacts (contact_id, last_name, first_name, phone, email, gender, birthday, prof_id, zip_code, status_id)
-VALUES (1600, 'Test', 'User', 12345, 'test.user@email.com', 'Male', '1990-01-01', 10, '1234', 1);
-
-UPDATE public.my_contacts
-SET zip_code = 2001
-WHERE contact_id = 100;
-
---unique profession collumn
-ALTER TABLE public.profession
-ADD CONSTRAINT unique_professions UNIQUE (profession);
-
---updateing my_contacts table to ensure phone is 10 digits and randon generate numbers
-ALTER TABLE public.my_contacts
-ALTER COLUMN phone TYPE bigint;
-
-UPDATE public.my_contacts
-SET phone = (floor(random() * 9000000000) + 1000000000)::bigint;
-
--- Add a check constraint to ensure the length is 10 digits
-ALTER TABLE public.my_contacts
-ADD CONSTRAINT check_phone_length CHECK (LENGTH(phone::text) = 10);
