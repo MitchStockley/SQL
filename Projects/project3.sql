@@ -75,6 +75,34 @@ ALTER TABLE IF EXISTS public."OrderDetails Table"
 
 END;
 
+select * from public."Cart Table"
+select * from public."Users Table"
+select * from public."Products Menu Table"
+select * from public."OrderHeader Table"
+select * from public."OrderDetails Table"
+
+-- Add unique constraint to OrderDetails table for order_id
+ALTER TABLE public."OrderDetails Table"
+ADD CONSTRAINT unique_order_id_order_details
+UNIQUE (order_id);
+
+-- Add the foreign key constraint to OrderDetails table
+ALTER TABLE public."OrderDetails Table"
+ADD CONSTRAINT fk_order_details_order_header
+FOREIGN KEY (order_id)
+REFERENCES public."OrderHeader Table"(order_id);
+
+	
+ALTER TABLE public."OrderDetails Table"
+ADD CONSTRAINT unique_order_id
+UNIQUE (order_id);
+
+-- Delete all rows from OrderDetails table
+DELETE FROM public."OrderHeader Table";
+
+-- Delete all rows from OrderHeader table
+DELETE FROM OrderHeader;
+
 
 --Adding items into the products menu table
 INSERT INTO public."Products Menu Table" (product_id, product_name, product_price)
@@ -97,7 +125,7 @@ select * from public."Users Table";
 --STEP 3 ----Add a product to the cart (if product exists, increment qty by the supplied amount; if not, insert with qty)
 
 INSERT INTO public."Cart Table" (product_id, qty)
-VALUES (10, 3) -- Example values: product_id and qty -- change values based on product and qty being added -- test all products 
+VALUES (20, 3) -- Example values: product_id and qty -- change values based on product and qty being added -- test all products 
 ON CONFLICT (product_id)
 DO UPDATE SET qty = public."Cart Table".qty + EXCLUDED.qty
 WHERE public."Cart Table".product_id = EXCLUDED.product_id;
@@ -105,10 +133,10 @@ WHERE public."Cart Table".product_id = EXCLUDED.product_id;
 --STEP 4 ---- Decrease the quantity by a specified amount, and remove if qty is less than 1
 UPDATE public."Cart Table"
 SET qty = GREATEST(qty - 3, 0) -- Example value: decrease by 3
-WHERE product_id = 30; -- Change value based on product_id
+WHERE product_id = 10; -- Change value based on product_id
 
 DELETE FROM public."Cart Table" -- If the quantity becomes 0, delete the product from the table
-WHERE product_id = 30 AND qty = 0;
+WHERE product_id = 10 AND qty = 0;
 
 --STEP 5 ----Checkout to place the order
 INSERT INTO public."OrderHeader Table" ("order_id","user_id", "order_date")
@@ -121,7 +149,7 @@ VALUES
 --STEP 6 ---- Use the order ID to insert the cart contents into the order details table and delete the cart contents
 INSERT INTO "OrderDetails Table" (order_id, product_id, qty)
 SELECT
-    151 as order_id, --change order id based on new orders 
+    161 as order_id, --change order id based on new orders 
     ct.product_id,
     ct.qty
 FROM
@@ -149,7 +177,7 @@ SELECT
 FROM
     "OrderHeader Table"
 WHERE
-    DATE(order_date) = '2023-04-04'; -- Replace '2023-04-04' with the actual date you want to query
+    DATE(order_date) = '2023-12-13'; -- 
 
 --inner join to retrieve details from both the "OrderHeader Table" and the "OrderDetails Table":
 SELECT
@@ -162,6 +190,5 @@ FROM
     "OrderHeader Table" oh
 JOIN
     "OrderDetails Table" od ON oh.order_id = od.order_id;
-
 
 
